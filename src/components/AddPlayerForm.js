@@ -2,19 +2,12 @@ import React, {Component} from 'react';
 
 class AddPlayerForm extends Component {
 
-    state = {
-        value: ''
-    }
-
-    handleValueChange = (e) => {
-        this.setState( {value: e.target.value} );
-    }
+    playerInput = React.createRef();
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const playerName = this.state.value;
-        this.props.addPlayer(playerName);
-        this.setState( {value: ''} );
+        this.props.addPlayer(this.playerInput.current.value);
+        e.currentTarget.reset();
     }
 
     render() {
@@ -23,9 +16,8 @@ class AddPlayerForm extends Component {
 
                 <input
                     type="text"
+                    ref={this.playerInput}
                     placeholder="Enter a name..."
-                    onChange={this.handleValueChange}
-                    value={this.state.value}
                 />
 
                 <input 
