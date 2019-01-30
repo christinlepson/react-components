@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from './components/Header';
 import Player from './components/Player';
+import AddPlayerForm from './components/AddPlayerForm'
 
 class App extends Component {
   state = {
@@ -29,12 +30,32 @@ class App extends Component {
     ]
   };
 
+  lastPlayerID = 4;
+
   handleRemovePlayer = (id) => {
     this.setState( prevState => {
       return {
         players: prevState.players.filter(p => p.id !== id)
       };
     });
+  }
+
+  handleAddPlayer = (playerName) => {
+
+      const newPlayer = {
+          name: playerName,
+          score: 0,
+          id: this.lastPlayerID + 1
+      }
+
+      this.lastPlayerID++;
+
+      this.setState( prevState => {
+          return {
+              players: [...prevState.players, newPlayer]
+          }
+      } );
+
   }
 
   handleScoreChange = (delta, id) => {
@@ -63,6 +84,11 @@ class App extends Component {
             changeScore={this.handleScoreChange}
           />
         )}
+
+        <AddPlayerForm
+            addPlayer={this.handleAddPlayer}
+        />
+
       </div>
     );
   }
