@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Provider } from './components/Context/';
 import './App.css';
 import Header from './components/Header';
-import Player from './components/Player';
+import PlayerList from './components/PlayerList';
 import AddPlayerForm from './components/AddPlayerForm'
 
 class App extends Component {
@@ -27,7 +28,9 @@ class App extends Component {
         score: 0,
         id: 4
       }
-    ]
+    ],
+
+    highestScore: 0
   };
 
   lastPlayerID = 4;
@@ -63,33 +66,30 @@ class App extends Component {
           const player = prevState.players.filter(p => p.id === id)[0];
           return {score: player.score += delta};
       } );
+
+      this.setState( prevState => {
+        const newHighScore = prevState.players.reduce( (max, p) => p.score > max ? p.score : max , 0);
+        return ({highestScore: newHighScore});
+      } );
   }
 
   render() {
     return (
-      <div className="scoreboard">
-        <Header 
-          title="Scoreboard" 
-          players={this.state.players} 
-        />
-  
-        {/* Players list */}
-        {this.state.players.map( player =>
-          <Player 
-            name={player.name}
-            id={player.id}
-            key={player.id.toString()} 
-            removePlayer={this.handleRemovePlayer}           
-            score={player.score}
-            changeScore={this.handleScoreChange}
-          />
-        )}
-
-        <AddPlayerForm
-            addPlayer={this.handleAddPlayer}
-        />
-
-      </div>
+    <Provider value={{
+        players: this.state.players,
+        highestScore: this.state.highestScore,
+        actions: {
+            changeScore: this.handleScoreChange,
+            removePlayer: this.handleRemovePlayer,
+            addPlayer: this.handleAddPlayer
+        }
+    }}>
+        <div className="scoreboard">
+            <Header/>
+            <PlayerList/>
+            <AddPlayerForm/>
+        </div>
+    </Provider>
     );
   }
 }

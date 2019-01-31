@@ -1,23 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {Consumer} from './Context'
 
 const Counter = (props) => {
     return (
-        <div className="counter">
-            <button className="counter-action decrement" onClick={ () => {
-                props.changeScore(-1, props.id);
-            } }> - </button>
-            <span className="counter-score">{ props.score }</span>
-            <button className="counter-action increment" onClick={ () =>
-            props.changeScore(1, props.id) }> + </button>
-        </div>
+        <Consumer>
+            { context => 
+                (<div className="counter">
+                    <button className="counter-action decrement" onClick={ () => {
+                        context.actions.changeScore(-1, props.id);
+                    } }> - </button>
+                    <span className="counter-score">{ props.score }</span>
+                    <button className="counter-action increment" onClick={ () =>
+                    context.actions.changeScore(1, props.id) }> + </button>
+                </div>)
+            }
+        </Consumer>
     );
   }
-
-  Counter.propTypes = {
-      id: PropTypes.number,
-      score: PropTypes.number,
-      changeScore: PropTypes.func
-  }
-
-  export default Counter;
+ export default Counter;
